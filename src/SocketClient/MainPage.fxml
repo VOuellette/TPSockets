@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SocketClient.MainMenuController">
+   <children>
+      <AnchorPane prefHeight="403.0" prefWidth="600.0">
+         <children>
+            <TextField fx:id="chatField" alignment="TOP_LEFT" layoutX="14.0" layoutY="308.0" prefHeight="64.0" prefWidth="356.0" promptText="Chat" />
+            <Button fx:id="sendButton" layoutX="14.0" layoutY="374.0" mnemonicParsing="false" onAction="#SendButtonClick" prefHeight="25.0" prefWidth="77.0" text="Send" />
+            <ListView fx:id="ChatMessagesList" layoutX="14.0" layoutY="14.0" prefHeight="287.0" prefWidth="356.0" />
+            <ListView fx:id="connectedUsersList" layoutX="388.0" layoutY="14.0" prefHeight="287.0" prefWidth="202.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>

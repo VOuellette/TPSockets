@@ -1,60 +1,42 @@
 package SocketClient;
 
-import java.net.*;  
-import java.io.*;  
+import java.io.IOException;
 
-public class SocketClient {
-	
-	private static PrintWriter out;
-	private static BufferedReader in;
-	private static BufferedReader stdIn;
-	
+import javafx.application.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class SocketClient extends Application{
 	public static void main(String[] args) {
 		
-		Socket socket;
-		
-		try{  
-			
-			socket = new Socket("localhost", 8181);						
-			
-			out = new PrintWriter(socket.getOutputStream(), true); 					 // Output to Server						
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream())); // Input from Server			
-			stdIn = new BufferedReader(new InputStreamReader(System.in)); 			 // System IO
-			
-			// Listen for server output on a separate thread
-			Thread threadServerOutput = new Thread(() -> {
-				String line;
-				while(!socket.isClosed()) {					
-					try {						
-						if(in != null && (line = in.readLine()) != null) OnServerMessage(line);	
-						
-					}catch(Exception e) {
-						System.out.println(e);
-					}
-				}
-			});
-			threadServerOutput.start();
-			
-			
-			// Wait for client input
-			String userInput;
-			while ((userInput = stdIn.readLine()).compareTo("exit") != 0) {
-				out.println(userInput);
-			}
-			
-			threadServerOutput.interrupt();
-			socket.close();			
-		}
-		catch(Exception e){
-			System.out.println(e);
-		}  
+		launch(args);
 	}
 	
-	private static void OnServerMessage(String message) {
-		// message devrait normalement etre format JSON, juste string pour tests
-		System.out.println("Server : " + message);
+	public Context context;
+	
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		FXMLLoader loader = new FXMLLoader(SocketClient.class.getResource("Connection_Page.fxml"));
+		Parent parent = loader.load();
+		ConnectionPageController controller = loader.getController();
+		context = new Context();
+		controller.initialize(primaryStage, context);
 		
-		// Json convert and shit
+		Scene scene = new Scene(parent, 600, 400);
+		primaryStage.setTitle("Client application");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+		
+	}
+	
+	@Override
+	public void stop() throws IOException {
+		if(context.socket != null) {
+			context.out.println("The user " + context.username + " is now deconnected");
+			context.socket.close();
+		}
 	}
 
 }
