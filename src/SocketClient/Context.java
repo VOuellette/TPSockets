@@ -1,10 +1,13 @@
 package SocketClient;
 
 import java.io.BufferedReader;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.scene.control.ListView;
 
 public class Context {
 	public String username;
@@ -12,9 +15,10 @@ public class Context {
 	public String serverPort;
 	public List<String> connectedUsers;
 	public Socket socket;
-	public PrintWriter out;
-	public BufferedReader in;
+	public ObjectOutputStream out;
+	public ObjectInputStream in;
 	public BufferedReader stdIn;
+	private ListView<String> ChatMessagesList;
 	
 	public Context() {
 		username = "";
@@ -25,5 +29,6 @@ public class Context {
 		out = null;
 		in = null;
 		stdIn = null;
+		ChatMessagesList = null;
 	}
 }

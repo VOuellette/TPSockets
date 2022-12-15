@@ -8,7 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class SocketClient extends Application{
+
+public class SocketClient extends Application {
 	public static void main(String[] args) {
 		
 		launch(args);
@@ -33,9 +34,10 @@ public class SocketClient extends Application{
 	
 	@Override
 	public void stop() throws IOException {
+		SocketPacket packet = new SocketPacket();
 		if(context.socket != null) {
-			context.out.println("The user " + context.username + " is now deconnected");
-			context.socket.close();
+			packet.SetPacketType(PacketType.DISCONNECT);
+			context.out.writeObject(packet);
 		}
 	}
 

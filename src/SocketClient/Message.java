@@ -5,16 +5,18 @@ public class Message {
 	private int option;
 	private String toUser;
 	private String message;
+	private PacketType messageType;
 	
-	public Message(String userName, int option, String toUser, String message) {
+	public Message(String userName, int option, String toUser, String message, PacketType messageType) {
 		this.setMessage(message);
 		this.setOption(option);
 		this.setToUser(toUser);
 		this.setUserName(userName);
+		this.setMessageType(messageType);
 	}
 	
 	public String toString() {
-		return getUserName() + "/" + getOption() + "/" + getToUser() + "/" + getMessage();
+		return getMessageType() + "/&/" + getUserName() + "/&/" + getMessage();
 	}
 
 	public String getUserName() {
@@ -47,5 +49,13 @@ public class Message {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	
+	public PacketType getMessageType() {
+		return this.messageType;
+	}
+	
+	public void setMessageType(PacketType messageType) {
+		this.messageType = messageType;
 	}
 }

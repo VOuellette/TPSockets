@@ -34,6 +34,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
@@ -44,11 +45,18 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="serverAdressField" layoutX="196.0" layoutY="72.0" prefHeight="22.0" prefWidth="208.0" promptText="Server Adress" />
-            <TextField fx:id="serverPortField" layoutX="196.0" layoutY="115.0" prefHeight="22.0" prefWidth="208.0" promptText="Server Port" />
-            <TextField fx:id="UsernameField" layoutX="196.0" layoutY="165.0" prefHeight="22.0" prefWidth="208.0" promptText="Username" />
-            <Button fx:id="connectButton" layoutX="270.0" layoutY="200.0" mnemonicParsing="false" onAction="#ConnectButtonClick" text="Connect" />
-            <Text fx:id="ErrorMessage" fill="RED" layoutX="197.0" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" wrappingWidth="206.13671875">
+         
+			<Label fx:id="lblAdress" layoutX="196.0" layoutY="72.0" prefHeight="22.0" prefWidth="208.0" text="Server Adress" />
+            <TextField fx:id="serverAdressField" layoutX="196.0" layoutY="94.0" prefHeight="22.0" prefWidth="208.0" text="127.0.0.1" />
+            
+            <Label fx:id="lblPort" layoutX="196.0" layoutY="138.0" prefHeight="22.0" prefWidth="208.0" text="Server Port" />
+            <TextField fx:id="serverPortField" layoutX="196.0" layoutY="160.0" prefHeight="22.0" prefWidth="208.0" text="8181" />
+            
+            <Label fx:id="lblUsername" layoutX="196.0" layoutY="204.0" prefHeight="22.0" prefWidth="208.0" text="Username" />
+            <TextField fx:id="UsernameField" layoutX="196.0" layoutY="226.0" prefHeight="22.0" prefWidth="208.0" />
+            
+            <Button fx:id="connectButton" layoutX="270.0" layoutY="270.0" mnemonicParsing="false" onAction="#ConnectButtonClick" text="Connect" />
+            <Text fx:id="ErrorMessage" fill="RED" layoutX="197.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" wrappingWidth="206.13671875">
                <font>
                   <Font size="21.0" />
                </font>
