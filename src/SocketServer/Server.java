@@ -3,11 +3,15 @@ package SocketServer;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import SocketClient.PacketType;
+import SocketClient.SocketPacket;
 
 public class Server {
 	private ServerSocket serverSocket;
-    private Socket clientSocket;
-    private ArrayList<Socket> clients = new ArrayList<Socket>();
+    private HashMap<String, SocketWrapper> clients = new HashMap<String, SocketWrapper>();
     
     private int port;
     
@@ -24,22 +28,20 @@ public class Server {
     
     public void Start() {
     	while (true) {
-    		PrintWriter out = null;
-    		BufferedReader in = null;
+    		SocketWrapper socket = new SocketWrapper();
     		
             try {
-            	clientSocket = serverSocket.accept();
+            	socket.socket = serverSocket.accept();            	
+            	//clients.add(socket);
             	
-            	clients.add(clientSocket);
-            	
-            	System.out.println("Client " + clientSocket.getInetAddress().getHostName() + " connected");            	
+            	//System.out.println("Client " + clientSocket.getInetAddress().getHostName() + " connected");            	
             } catch (IOException e) {
                 System.out.println("I/O error: " + e);
                 return;
             }
             
             // new thread for a client
-            new ClientThread(clientSocket).start();
+            new ClientThread(socket, this).start();
         } 
     }
     
@@ -57,4 +59,59 @@ public class Server {
     	}
     }
 
+	public void Broadcast(SocketPacket packet) {		
+    	try {    	
+    		for (HashMap.Entry<String, SocketWrapper> entry : clients.entrySet()) {
+    			
+    			// Si on envoie un message privé, envoi seulement aux destinataires et au sender
+    			if(packet.users != null && !Arrays.stream(packet.users).anyMatch(entry.getKey()::equals) && entry.getKey() != packet.username) continue;
+    			
+    	        entry.getValue().out.writeObject(packet);
+    	        entry.getValue().out.flush();
+    	    }
+    	} catch(Exception e) {
+    		System.out.println(e);    
+    	}		
+	}
+	
+	public void BroadcastUserList() {
+		SocketPacket packet = new SocketPacket();
+		StringBuilder sb = new StringBuilder();
+		
+		// Build clients message string
+		clients.keySet().forEach((key) -> { sb.append(key + ";"); });
+		
+		packet.SetPacketType(PacketType.USER_LIST)
+			  .SetMessage(sb.toString());
+		
+		Broadcast(packet);		
+	}
+	
+	public void RegisterClient(SocketWrapper socket, SocketPacket packet) {
+		socket.username = packet.username;
+		clients.put(packet.username, socket);
+		System.out.println(String.format("Client %s connected.", socket.username));
+		
+		BroadcastUserList();
+	}
+	
+	public void DisconnectClient(SocketWrapper socket) {
+		SocketPacket packet = new SocketPacket();
+		packet.SetPacketType(PacketType.DISCONNECT);
+		
+		try {
+			String username = socket.username;
+			
+			System.out.println(String.format("Client %s disconnected.", username));
+			
+			socket.out.writeObject(packet);
+			
+			clients.remove(username);
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		BroadcastUserList();		
+	}
 }

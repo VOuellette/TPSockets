@@ -1,35 +1,42 @@
 package SocketServer;
 
 import java.net.Socket;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.BufferedReader;
 
+import SocketClient.SocketPacket;
+import SocketClient.PacketType;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class ClientThread extends Thread {
 	
-	private Socket socket;
-	private PrintWriter out;
-	private BufferedReader in;
+	private SocketWrapper socket;
+	private Server srv;
 	
-	public ClientThread(Socket clientSocket) {
-		this.socket = clientSocket;
+	public ClientThread(SocketWrapper socket, Server srv) {
+		this.socket = socket;
+		this.srv = srv;
 	}
 	
+
 	public void run() {
-		String inputLine;
+		SocketPacket packet;
 		
 		try {
-			this.out =  new PrintWriter(this.socket.getOutputStream(), true);
-			this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-			//out.println("whaddup");
-			//TODO envoit de la premiere reponse du serveur contenant la liste des users connectes
-			while ((inputLine = in.readLine()) != null) {
-				System.out.println(inputLine);
-			}			
+			this.socket.out = new ObjectOutputStream(this.socket.socket.getOutputStream());		
+			this.socket.in = new ObjectInputStream(this.socket.socket.getInputStream());			
+
+			while ((packet = (SocketPacket) this.socket.in.readObject()) != null) {						
+				switch(packet.packetType) {
+					case REGISTER_CLIENT: srv.RegisterClient(this.socket, packet); break;
+					case BROADCAST: srv.Broadcast(packet); break;
+					case USER_LIST: srv.BroadcastUserList(); break;
+					case DISCONNECT: srv.DisconnectClient(this.socket); return;
+				}				
+			}
 		}
 		catch(Exception e) {
-			out.println(e);
+			System.out.println(e);
 			return;
 		}
 	}
