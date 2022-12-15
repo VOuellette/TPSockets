@@ -25,8 +25,9 @@ public class SocketPacket implements Serializable {
 		return this;
 	}
 	
-	public void SetUsers(String[] users) {
+	public SocketPacket SetUsers(String[] users) {
 		this.users = users;
+		return this;
 	}
 	
 	public PacketType GetPacketType() {

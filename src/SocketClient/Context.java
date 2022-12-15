@@ -17,8 +17,6 @@ public class Context {
 	public Socket socket;
 	public ObjectOutputStream out;
 	public ObjectInputStream in;
-	public BufferedReader stdIn;
-	private ListView<String> ChatMessagesList;
 	
 	public Context() {
 		username = "";
@@ -28,7 +26,5 @@ public class Context {
 		socket = null;
 		out = null;
 		in = null;
-		stdIn = null;
-		ChatMessagesList = null;
 	}
 }

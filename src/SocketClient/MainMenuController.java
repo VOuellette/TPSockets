@@ -19,7 +19,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
 public class MainMenuController extends BaseController{
-	private Message message;
     @FXML
     private ListView<String> ChatMessagesList;
 
@@ -79,8 +78,6 @@ public class MainMenuController extends BaseController{
     	
 		context.out = new ObjectOutputStream(context.socket.getOutputStream()); 		// Output to Server					
 		context.in = new ObjectInputStream(context.socket.getInputStream()); 			// Input from Server	
-
-		context.stdIn = new BufferedReader(new InputStreamReader(System.in)); 		
 		
 		System.out.println("Socket connected. Starting Server thread.");
 		
@@ -138,18 +135,19 @@ public class MainMenuController extends BaseController{
 				break;
 			case DISCONNECT:
 				
-			try {
-				context.out.close();
-				context.in.close();
-				context.socket.close();
+				try {
+					context.out.close();
+					context.in.close();
+					context.socket.close();
+					
+					System.out.println("Disconnected");
+					
+					System.exit(0);
+				} catch (Exception e) {
+					System.out.println(e);
+				}
 				
-				System.out.println("Disconnected");
-				
-				System.exit(0);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				break;
 
 			default: break;
 		}
